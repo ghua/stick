@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/shopspring/decimal"
 )
@@ -221,7 +222,7 @@ func GetAttr(v Value, attr Value, args ...Value) (Value, error) {
 	var retval reflect.Value
 	switch r.Kind() {
 	case reflect.Struct:
-		strval := CoerceString(attr)
+		strval := strings.Title(CoerceString(attr))
 		retval = r.FieldByName(strval)
 		if !retval.IsValid() {
 			var err error
