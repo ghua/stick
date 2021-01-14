@@ -1,4 +1,4 @@
-module github.com/ghua/stick
+module github.com/tyler-sommer/stick
 
 go 1.12
 
