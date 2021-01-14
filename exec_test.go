@@ -41,7 +41,7 @@ var tests = []execTest{
 	{"Constant null", `{% if test == null %}Yes{% else %}no{% endif %}`, map[string]Value{"test": nil}, expect(`Yes`)},
 	{"Constant bool", `{% if test == true %}Yes{% else %}no{% endif %}`, map[string]Value{"test": false}, expect(`no`)},
 	{"Chained attributes", `{{ entity.attr.Name }}`, map[string]Value{"entity": map[string]Value{"attr": struct{ Name string }{"Tyler"}}}, expect(`Tyler`)},
-	{"Chained attributes", `{{ entity.attr.name }}`, map[string]Value{"entity": map[string]Value{"attr": struct{ Name string }{"Durden"}}}, expect(`Durden`)},
+	{"Chained attributes, with lower-case attribute name", `{{ entity.attr.name }}`, map[string]Value{"entity": map[string]Value{"attr": struct{ Name string }{"Durden"}}}, expect(`Durden`)},
 	{"Attribute method call", `{{ entity.Name('lower') }}`, map[string]Value{"entity": &testPerson{"Johnny"}}, expect(`lowerJohnny`)},
 	{"Attribute method call, with lower-case method name", `{{ entity.name('upper') }}`, map[string]Value{"entity": &testPerson{"Johnny"}}, expect(`upperJohnny`)},
 	{"For loop", `{% for i in 1..3 %}{{ i }}{% endfor %}`, emptyCtx, expect(`123`)},
