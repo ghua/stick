@@ -180,6 +180,9 @@ func (t *Tree) parseRightTestOperand(prev *NameExpr) (*TestExpr, error) {
 			r.Name = prev.Name + " " + r.Name
 		}
 		return &TestExpr{r}, nil
+	case *NullExpr:
+		return NewTestExpr("null", []Expr{}, r.Pos), nil
+
 	default:
 		return nil, fmt.Errorf(`Expected name or function, got "%v"`, right)
 	}

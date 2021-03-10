@@ -3,6 +3,7 @@ package stick
 import (
 	"bytes"
 	"io"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -42,6 +43,7 @@ var tests = []execTest{
 	{"Constant bool", `{% if test == true %}Yes{% else %}no{% endif %}`, map[string]Value{"test": false}, expect(`no`)},
 	{"Chained attributes", `{{ entity.attr.Name }}`, map[string]Value{"entity": map[string]Value{"attr": struct{ Name string }{"Tyler"}}}, expect(`Tyler`)},
 	{"Chained attributes, with lower-case attribute name", `{{ entity.attr.name }}`, map[string]Value{"entity": map[string]Value{"attr": struct{ Name string }{"Durden"}}}, expect(`Durden`)},
+	{"Chained attributes with binary is", `{% if entity.attr is null %}NULL{% else %}NOT NULL{% endif %}`, map[string]Value{"entity": struct{}{}}, expect(`NULL`)},
 	{"Attribute method call", `{{ entity.Name('lower') }}`, map[string]Value{"entity": &testPerson{"Johnny"}}, expect(`lowerJohnny`)},
 	{"Attribute method call, with lower-case method name", `{{ entity.name('upper') }}`, map[string]Value{"entity": &testPerson{"Johnny"}}, expect(`upperJohnny`)},
 	{"For loop", `{% for i in 1..3 %}{{ i }}{% endfor %}`, emptyCtx, expect(`123`)},
@@ -250,6 +252,12 @@ func TestExec(t *testing.T) {
 			return d
 		}
 		return val
+	}
+	env.Tests["null"] = func(ctx Context, val Value, args ...Value) bool {
+		if val == nil {
+			return true
+		}
+		return reflect.ValueOf(val).IsZero()
 	}
 	for _, test := range tests {
 		evaluateTest(t, env, test)

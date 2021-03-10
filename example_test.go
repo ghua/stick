@@ -3,6 +3,7 @@ package stick_test
 import (
 	"fmt"
 	"os"
+	"reflect"
 
 	"strconv"
 
@@ -122,6 +123,33 @@ func ExampleTest() {
 		fmt.Println(err)
 	}
 	// Output: empty - not empty
+}
+
+// A test to test if struct is equal to null
+func ExampleTest_isNullWithEmptyStruct() {
+	env := stick.New(nil)
+	env.Tests["null"] = func(ctx stick.Context, val stick.Value, args ...stick.Value) bool {
+		return reflect.ValueOf(val).IsZero()
+	}
+
+	type Child struct {
+		ValueInt    int
+		ValueString string
+	}
+
+	type Entity struct {
+		Child Child
+	}
+
+	err := env.Execute(
+		`{{ ( 'something' is null) ? 'null' : 'not null' }} - {{ (entity.child is not null) ? 'not null' : 'null' }}`,
+		os.Stdout,
+		map[string]stick.Value{"entity": Entity{}},
+	)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output: not null - null
 }
 
 // A test made up of two words that takes an argument.

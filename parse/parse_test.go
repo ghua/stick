@@ -235,8 +235,11 @@ var parseTests = []parseTest{
 	),
 	newParseTest(
 		"test parsing",
-		"{{ animal is mammal }}{{ 10 is not divisible by(3) }}",
-		mkModule(NewPrintNode(NewBinaryExpr(NewNameExpr("animal", noPos), OpBinaryIs, NewTestExpr("mammal", []Expr{}, noPos), noPos), noPos), NewPrintNode(NewBinaryExpr(NewNumberExpr("10", noPos), OpBinaryIsNot, NewTestExpr("divisible by", []Expr{NewNumberExpr("3", noPos)}, noPos), noPos), noPos)),
+		"{{ animal is mammal }}{{ 10 is not divisible by(3) }}{{ true is null }}",
+		mkModule(
+			NewPrintNode(NewBinaryExpr(NewNameExpr("animal", noPos), OpBinaryIs, NewTestExpr("mammal", []Expr{}, noPos), noPos), noPos),
+			NewPrintNode(NewBinaryExpr(NewNumberExpr("10", noPos), OpBinaryIsNot, NewTestExpr("divisible by", []Expr{NewNumberExpr("3", noPos)}, noPos), noPos), noPos),
+			NewPrintNode(NewBinaryExpr(NewBoolExpr(true, noPos), OpBinaryIs, NewTestExpr("null", []Expr{}, noPos), noPos), noPos)),
 	),
 	newParseTest(
 		"comment",
